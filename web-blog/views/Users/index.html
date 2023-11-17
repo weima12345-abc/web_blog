@@ -1,0 +1,58 @@
+{{ define "users/index" }}
+    {{ template "layout/header" .}}
+    <div class="ui container">
+        <div class="ui padded grid stackable">
+            {{/* 博客列表 */}}
+            <div class="twelve wide column">
+                {{$selfId := .user.ID}}
+                {{range $key, $item := .list}}
+                    <article class="post" style="padding-top: 0;" >
+                        <h1 class="title" style="font-size: 1.6rem"><a style="color:whitesmoke" href="/show/{{$item.Article_xiazhaoxuan.ID}}">{{$item.Article_xiazhaoxuan.Title}}</a></h1>
+                        <div style="color:whitesmoke">
+                            {{formatAsDate $item.Article_xiazhaoxuan.CreatedAt}} | 
+                            {{$userId := $item.UserId}}
+                            {{if eq $userId $selfId}}
+                            | <span style="cursor: pointer;color:whitesmoke" onclick="delArticle(this, {{$item.Article_xiazhaoxuan.ID}})"><i class="icon delete"></i>删除</span>
+                            {{end}}
+                        </div>
+                        <div class="entry-content" style="color:whitesmoke">
+                            {{mbSubstr $item.Article_xiazhaoxuan.Content 300}}
+                        </div>
+                    </article>
+                {{else}}
+                    <h1 style="text-align: center;padding: 5em 0;color:whitesmoke">这个人很懒，什么都没写</h1>
+                {{end}}
+                {{if gt .paginator.totalpages 0}}
+                    <div class="ui grid">
+                        <div class="five wide column" style="font-size: 16px;line-height: 46px;color:whitesmoke">当前第 {{.paginator.currpage}} 页 / 共 {{.paginator.totalpages}} 页</div>
+                        <div class="eleven wide column" style="padding-right: 40px">
+                            <div class="ui pagination menu pull-right">
+                                <a class="item" href="/center/{{.user.ID}}?page={{.paginator.firstpage}}">«</a>
+                                {{$userId := .user.ID}}
+                                {{range $index, $page := .paginator.pages}}
+                                    <a href="/center/{{$userId}}?page={{$page}}" class="item {{if eq $.paginator.currpage $page }}active{{end}}">{{$page}}</a>
+                                {{end}}
+                                <a href="/center/{{.user.ID}}?page={{.paginator.lastpage}}" class="item">»</a>
+                            </div>
+                        </div>
+                        <div style="height: 20px;clear: both"></div>
+                    </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    <script>
+        function delArticle(obj, id) {
+            $(obj).html("正在删除...");
+            $.post("/delblog", {id: id}, function(res) {
+                if (res.code === 200) {
+                    location.reload();
+                } else {
+                    $(obj).css({"color": "red"}).html("删除失败");
+                    setTimeout(() => { location.reload(); }, 2000);
+                }
+            });
+        }
+    </script>
+    {{ template "layout/footer" .}}
+{{ end }}

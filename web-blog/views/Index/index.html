@@ -1,0 +1,46 @@
+{{ define "index/index" }}
+{{ template "layout/header" .}}
+<div class="ui container">
+    <div class="ui padded grid stackable">
+        <div class="twelve wide column" style="text-align:center">
+            <div class="ui message" style="padding: 3em;text-align: center">
+                <h2 class="ui huge header">欢迎来到 夏昭轩x web微博</h2>
+            </div>
+            <div class="ui hidden divider"></div>
+            <div class="ui grid">
+                <div class="three column row">
+                    {{range $key, $item := .article}}
+                        <div class="column">
+                            <a style="color:whitesmoke" href="/show/{{$item.ID}}" class="ui header index-header">{{$item.Title}}</a>
+                            <p style="padding-top: 5px;color:whitesmoke" class="index-content">{{mbSubstr $item.Content 80}}</p>
+                        </div>
+                        {{if eq $key 2}}
+                                </div>
+                            <div class="three column row">
+                        {{else if eq $key 5}}
+                            </div>
+                        {{end}}
+                    {{end}}
+            </div>
+        </div>
+        <div class="four wide column computer only">
+            <div class="ui card">
+                <div class="image">
+                    <img src="/statics/imgs/logo/card1.png">
+                </div>
+                <div class="content">
+                    <a class="header">夏昭轩x</a>
+                    <div class="meta">
+                        <span class="date">peace</span>
+                    </div>
+                    <div class="description">网易音乐人、作词、作曲、编曲</div>
+                </div>
+                <div class="extra content">
+                    <a><i class="thumbtack icon"></i> 个人简介 </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ template "layout/footer" .}}
+{{ end }}

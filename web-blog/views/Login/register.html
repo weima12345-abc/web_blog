@@ -1,0 +1,47 @@
+{{ define "login/register" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .title }}</title>
+    <link rel="stylesheet" href="/statics/css/blog.css">
+    <link rel="stylesheet" href="/statics/css/semantic.min.css">
+</head>
+<body>
+    <div class="register">
+        <div class="register-logo">
+            <div class="logo">注册</div>
+            <div class="desc">Web微博</div>
+        </div>
+        <div class="register-form" style="margin-top: 50px">
+            <div class="mt-20 f16">成为用户</div>
+            <form class="ui form" action="/register" method="post">
+                <div class="ui icon input mt-20" style="width: 100%">
+                    <input type="text" name="username" value="" placeholder="登录账号">
+                    <i class="user icon"></i>
+                </div>
+                <div class="ui icon input mt-20" style="width: 100%">
+                    <input type="text" name="nickname" placeholder="昵称">
+                    <i class="spy icon"></i>
+                </div>
+                <div class="ui icon input mt-20" style="width: 100%">
+                    <input type="password" name="password" placeholder="登录密码">
+                    <i class="lock icon"></i>
+                </div>
+                <div class="ui primary button mt-10" onclick="submit();" style="width: 100%">创建账号</div>
+                <div class="ui button mt-10" onclick="window.location.href='/login'" style="width: 100%">已有账号，立即登录</div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/statics/js/jquery.min.js"></script>
+    <script src="/statics/js/semantic.min.js"></script>
+    <script>
+        $('select.dropdown').dropdown();
+        function submit() {
+            $("form").submit();
+        }
+    </script>
+</body>
+</html>
+{{ end }}

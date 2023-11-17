@@ -1,0 +1,88 @@
+{{ define "article/write" }}
+    <title>{{.title}}</title>
+    {{ template "layout/meta" .}}
+    <link rel="stylesheet" href="/statics/simplemde/simplemde.min.css">
+    <section class="article-write">
+        <form action="/write" method="post" id="blogform" style="margin: 0!important;">
+            <!-- 文章标题/头部 -->
+            <div class="ui dimmer" id="loading"><div class="ui loader"></div></div>
+            <header class="header">
+                <div class="ui grid">
+                    <div class="ten wide column">
+                        <input type="text" name="title" id="title" placeholder="输入文章标题..." class="write-input" />
+                    </div>
+                    <div class="six wide column">
+                        <div class="ui grid">
+                            <div class="four wide column"></div>
+                            <div class="seven wide column status-text"></div>
+                            <div class="three wide column">
+                                <div class="ui dropdown">
+                                    <div class="text status-light" onclick="saveArticle();">保存&发布</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- 文章编辑 -->
+            <div class="content">
+                <input type="hidden" name="content" id="formContent">
+                <textarea rows="15" style="border: none;opacity: 0;" id="content"></textarea>
+            </div>
+        </form>
+    </section>
+
+    <div class="ui tiny modal">
+        <i class="close icon"></i>
+        <div class="header">您现在要发表这篇微博吗？</div>
+        <div class="content">
+            <div class="description">
+                <div class="ui info message">
+                    <div class="header">在发表微博前，请注意以下几点须知 </div>
+                        <ul class="list">
+                            <li>您的微博只有您可以将其删除</li>
+                            <li>您的微博将被其他用户所见</li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui positive right labeled icon button" onclick="createArticle();">
+                确认
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+    <script src="/statics/js/jquery.min.js"></script>
+    <script src="/statics/js/message.js"></script>
+    <script src="/statics/js/semantic.min.js"></script>
+    <script src="/statics/simplemde/simplemde.min.js"></script>
+    <script>
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("content"),
+            autofocus:true,
+            autosave: {
+                enabled: true,
+                uniqueId: "SimpleMDE",
+                delay: 1000,
+            }
+        });
+        $('.ui.dropdown').dropdown(); /* 下拉 */
+        function saveArticle() {
+            var title = $("#title").val();
+            var content = simplemde.value();
+            if(title === "" || content == "") {
+                $('.ui.mini.modal').modal('show').find("#message").html("请输入文章标题以及文章内容");
+                return false;
+            }
+            $("#formContent").val(content);
+            $(".ui.tiny.modal").modal("show");
+        }
+        function createArticle() {
+            $("#loading").addClass("active");
+            setTimeout(() => {
+                $('#blogform').submit();
+            }, 1000);
+        }
+    </script>
+{{ end }}

@@ -1,0 +1,57 @@
+{{ define "article/list" }}
+    {{ template "layout/header" .}}
+    <style>
+        .ui.grid>.column:not(.row) {
+            padding-bottom: 0.5rem!important;
+        }
+    </style>
+
+    <!-- 内容 -->
+    <div class="ui grid container stackable" style="padding: 0 15px;margin-top: 0">
+        <div class="sub-title typeface" style="color: wheat;">
+            - Blog List &gt; -
+            <div class="sixteen wide column border-b mt-20"></div>
+        </div>
+        <div class="twelve wide column">
+            {{range $key, $item := .list}}
+                <article class="post" style="padding-right: 30px;">
+                    <h1 class="title"><a style="color:whitesmoke" href="/show/{{$item.Article_xiazhaoxuan.ID}}">{{$item.Article_xiazhaoxuan.Title}}</a></h1>
+                    <div style="color:rgb(184, 184, 184)">
+                        {{formatAsDate $item.Article_xiazhaoxuan.CreatedAt}} |
+                    </div>
+                    <div class="entry-content" style="color:whitesmoke">
+                        {{mbSubstr $item.Article_xiazhaoxuan.Content 300}}
+                    </div>
+                </article>
+            {{end}}
+
+            {{if gt .paginator.totalpages 0}}
+                <div class="ui grid"><!-- 分页 -->
+                    <div class="five wide column" style="font-size: 16px;line-height: 46px;color:rgb(184, 184, 184)">当前第 {{.paginator.currpage}} 页 / 共 {{.paginator.totalpages}} 页</div>
+                    <div class="eleven wide column" style="padding-right: 40px">
+                        <div class="ui pagination menu pull-right">
+                            <a class="item" href="/list?page={{.paginator.firstpage}}">«</a>
+                            {{range $index,$page := .paginator.pages}}
+                                <a href="/list?page={{$page}}" class="item {{if eq $.paginator.currpage $page }}active{{end}}">{{$page}}</a>
+                            {{end}}
+                            <a href="/list?page={{.paginator.lastpage}}" class="item">»</a>
+                        </div>
+                    </div>
+                    <div style="height: 20px;clear: both"></div>
+                </div>
+            {{end}}
+        </div>
+
+        <div class="four wide column computer only border-l" style="padding-left: 35px;">
+            <div class="item mt-30">
+                <div class="widget-title" style="color:whitesmoke">最近文章</div>
+                <ul class="widget-list">
+                    {{range $key, $item := .topList}}
+                        <li><a href="/show/{{$item.ID}}" style="color:whitesmoke" title="{{$item.Title}}">{{$item.Title}}</a></li>
+                    {{end}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {{ template "layout/footer" .}}
+{{ end }}
